@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Heavenly Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    {% if not logged_in %}
+    <div class="login-overlay">
+        <div class="login-box">
+            <div class="bot-avatar large-avatar"></div>
+            <h1>Heavenly Dashboard</h1>
+            <p>Please log in with Discord to manage your servers.</p>
+            <a href="/login" class="discord-login-btn">Login with Discord</a>
+        </div>
+    </div>
+    {% endif %}
+
+    <div class="dashboard-container">
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="bot-avatar"></div> Heavenly
+            </div>
+            <nav class="nav-menu">
+                <a href="#" class="nav-item active">⌂ Home</a>
+                <a href="#" class="nav-item">⚙ General</a>
+                <a href="#" class="nav-item">❯_ Commands</a>
+                <div class="nav-label">MODULES</div>
+                <a href="#" class="nav-item">🛡 AutoMod</a>
+                <a href="#" class="nav-item">☢ Anti-Nuke</a>
+                <a href="#" class="nav-item">⚔ Anti-Raid</a>
+                <a href="#" class="nav-item">⚠ Warnings</a>
+                <a href="#" class="nav-item">☺ Reaction Roles</a>
+                <a href="#" class="nav-item">👋 Welcome & Leave</a>
+                <a href="#" class="nav-item">🏷 Tags</a>
+            </nav>
+        </aside>
+
+        <main class="main-content">
+            <header class="top-header">
+                <div class="header-left">
+                    <button class="mobile-menu-btn" onclick="toggleMenu()">☰</button>
+                    <select id="server-select" class="server-dropdown" onchange="loadServerStats()">
+                        <option value="">Select a Server...</option>
+                    </select>
+                </div>
+                <div class="header-right">
+                    <div class="status-indicator"><span class="dot">●</span> Connected</div>
+                    <div class="user-profile">
+                        <img id="user-avatar" class="user-avatar" src="https://cdn.discordapp.com/embed/avatars/0.png" />
+                        <span id="user-name">Loading...</span>
+                        <a href="/logout" style="margin-left:12px; color:var(--text-muted); font-size:0.8rem; text-decoration:none;">Logout</a>
+                    </div>
+                </div>
+            </header>
+
+            <div class="content-area" onclick="closeMenu()">
+                <div class="hero-card">
+                    <h4 class="hero-subtitle">✦ LIVE SERVER STATS</h4>
+                    <h1>Heavenly is watching over this server.</h1>
+                    <p>Select a server from the top menu to load live stats.</p>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <span class="stat-label">Members</span>
+                        <span class="stat-value" id="stat-members">—</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-label">Warnings Issued</span>
+                        <span class="stat-value" id="stat-warnings">—</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-label">Active Giveaways</span>
+                        <span class="stat-value" id="stat-giveaways">—</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-label">Tags</span>
+                        <span class="stat-value" id="stat-tags">—</span>
+                    </div>
+                </div>
+
+                <h3 class="section-title">Protection modules</h3>
+                <div class="module-list">
+                    <div class="module-item">
+                        <div class="module-info">
+                            <h3>AutoMod</h3>
+                            <p>Automatically filters bad words and spam.</p>
+                        </div>
+                        <div class="module-status" id="status-automod">Off</div>
+                    </div>
+                    <div class="module-item">
+                        <div class="module-info">
+                            <h3>Anti-Nuke</h3>
+                            <p>Prevents mass channel deletion and bans.</p>
+                        </div>
+                        <div class="module-status" id="status-antinuke">Off</div>
+                    </div>
+                    <div class="module-item">
+                        <div class="module-info">
+                            <h3>Anti-Raid</h3>
+                            <p>Locks down the server during mass join attacks.</p>
+                        </div>
+                        <div class="module-status" id="status-antiraid">Off</div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        function toggleMenu() { document.getElementById('sidebar').classList.toggle('open'); }
+        function closeMenu() { document.getElementById('sidebar').classList.remove('open'); }
+
+        {% if logged_in %}
+        fetch('/api/user')
+            .then(response => response.json())
+            .then(data => {
+                if(data.error) return;
+                
+                document.getElementById('user-name').innerText = data.user.username;
+                if(data.user.avatar) {
+                    document.getElementById('user-avatar').src = `https://cdn.discordapp.com/avatars/${data.user.id}/${data.user.avatar}.png`;
+                }
+
+                const select = document.getElementById('server-select');
+                data.guilds.forEach(guild => {
+                    const option = document.createElement('option');
+                    option.value = guild.id;
+                    option.innerText = guild.name;
+                    select.appendChild(option);
+                });
+            });
+
+        function loadServerStats() {
+            const guildId = document.getElementById('server-select').value;
+            if(!guildId) return;
+            
+            fetch(`/api/guild/${guildId}/overview`)
+                .then(response => response.json())
+                .then(data => {
+                    if(data.error) return;
+                    document.getElementById('stat-members').innerText = data.members || "—";
+                    document.getElementById('stat-warnings').innerText = data.warnings_issued || "0";
+                    document.getElementById('stat-giveaways').innerText = data.active_giveaways || "0";
+                    document.getElementById('stat-tags').innerText = data.tags || "0";
+                    
+                    const setStatus = (id, isOn) => {
+                        const el = document.getElementById(id);
+                        el.innerText = isOn ? "Active" : "Off";
+                        el.style.color = isOn ? "#4ade80" : "var(--text-muted)";
+                    };
+                    
+                    setStatus('status-automod', data.automod_on);
+                    setStatus('status-antinuke', data.antinuke_on);
+                    setStatus('status-antiraid', data.antiraid_on);
+                });
+        }
+        {% endif %}
+    </script>
+</body>
+</html>
