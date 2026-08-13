@@ -1,0 +1,5 @@
+discord.py
+Flask
+waitress
+requests
+
