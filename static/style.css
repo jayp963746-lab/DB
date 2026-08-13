@@ -78,52 +78,84 @@ body { background-color: var(--bg-base); color: var(--text-main); overflow-x: hi
   margin: 0 auto;
 }
 /* ==========================================
-   DARK GOLDEN DROPDOWN & SELECT THEME
+   CUSTOM DARK GOLDEN DROPDOWN (MOBILE READY)
    ========================================== */
+.custom-dropdown {
+  position: relative;
+  min-width: 220px;
+}
 
-/* Styles all select dropdowns across the dashboard */
-select, .server-dropdown {
-  appearance: none;
-  -webkit-appearance: none;
-  -moz-appearance: none;
+.dropdown-selected {
   background-color: var(--bg-card);
   color: var(--text-main);
   border: 1px solid var(--gold-main);
-  padding: 10px 38px 10px 16px;
+  padding: 10px 16px;
   border-radius: 8px;
-  outline: none;
   font-size: 0.9rem;
   font-weight: 500;
   cursor: pointer;
-  transition: all 0.2s ease-in-out;
-  
-  /* Custom Gold Arrow Icon */
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23d4af37' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 14px center;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  transition: all 0.2s ease;
 }
 
-/* Hover & Focus state glow */
-select:hover, select:focus,
-.server-dropdown:hover, .server-dropdown:focus {
+.dropdown-selected:hover {
   background-color: var(--bg-panel);
-  border-color: var(--gold-main);
   box-shadow: 0 0 12px rgba(212, 175, 55, 0.35);
 }
 
-/* Dark Golden Styling for the options list popup */
-select option, .server-dropdown option {
-  background-color: #14120e !important;
-  color: #fcfbf9 !important;
-  padding: 12px 16px !important;
+.dropdown-arrow {
+  color: var(--gold-main);
+  font-size: 0.7rem;
+  transition: transform 0.2s ease;
+}
+
+.custom-dropdown.open .dropdown-arrow {
+  transform: rotate(180deg);
+}
+
+.dropdown-menu {
+  display: none;
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  right: 0;
+  background-color: #14120e;
+  border: 1px solid var(--gold-main);
+  border-radius: 10px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.85);
+  max-height: 240px;
+  overflow-y: auto;
+  z-index: 2500;
+}
+
+.custom-dropdown.open .dropdown-menu {
+  display: block;
+}
+
+.dropdown-option {
+  padding: 12px 16px;
+  color: var(--text-main);
   font-size: 0.9rem;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+  border-bottom: 1px solid var(--border-gold);
 }
 
-/* Selected option highlight */
-select option:checked, select option:hover,
-.server-dropdown option:checked, .server-dropdown option:hover {
-  background-color: #2a251d !important;
-  color: var(--gold-main) !important;
+.dropdown-option:last-child {
+  border-bottom: none;
 }
 
+.dropdown-option.muted {
+  color: var(--text-muted);
+  cursor: default;
+}
+
+.dropdown-option:hover, .dropdown-option.selected {
+  background-color: var(--gold-dim);
+  color: var(--gold-main);
+  font-weight: bold;
+}
