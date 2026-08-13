@@ -320,26 +320,83 @@
         </div>
     </div>
 
-    <!-- WELCOME & LEAVE TAB -->
+        <!-- WELCOME & LEAVE TAB -->
     <div id="tab-welcome" class="tab-section" style="display: none;">
         <h3 class="section-title">👋 Welcome & Leave Messages</h3>
         <div class="hero-card" style="text-align: left; padding: 25px; margin-bottom: 20px;">
-            <h2 style="margin: 0 0 15px 0; color: var(--gold-main); font-size: 1.2rem;">Welcome Message Settings</h2>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                <div>
+                    <h2 style="margin: 0; color: var(--gold-main); font-size: 1.1rem;">Enable Welcome Messages</h2>
+                </div>
+                <label class="switch">
+                  <input type="checkbox" id="wel-show-count">
+                  <span class="slider round"></span>
+                </label>
+            </div>
             
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 15px; margin-bottom: 15px;">
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 15px; margin-bottom: 15px;">
                 <div>
                     <label style="display: block; margin-bottom: 6px; color: var(--gold-main); font-weight: bold;">Welcome Channel ID</label>
-                    <input type="text" id="wel-channel-id" placeholder="e.g. 123456789012345678" style="width: 100%; background: #14120e; border: 1px solid var(--gold-main); color: #fcfbf9; padding: 10px; border-radius: 8px;">
+                    <input type="text" id="wel-channel-id" placeholder="e.g. 1234567890" style="width: 100%; background: #14120e; border: 1px solid var(--gold-main); color: #fcfbf9; padding: 10px; border-radius: 8px; outline: none;">
                 </div>
                 <div>
                     <label style="display: block; margin-bottom: 6px; color: var(--gold-main); font-weight: bold;">Display Style</label>
-                    <select id="wel-style" style="width: 100%; background: #14120e; border: 1px solid var(--gold-main); color: #fcfbf9; padding: 10px; border-radius: 8px;">
+                    <select id="wel-style" style="width: 100%; background: #14120e; border: 1px solid var(--gold-main); color: #fcfbf9; padding: 10px; border-radius: 8px; outline: none;">
                         <option value="plain">Plain Text</option>
                         <option value="embed">Embed Card</option>
                     </select>
                 </div>
+            </div>
+
+            <div style="margin-bottom: 15px;">
+                <label style="display: block; margin-bottom: 6px; color: var(--gold-main); font-weight: bold;">Welcome Message</label>
+                <textarea id="wel-message" rows="2" placeholder="Welcome {user} to the server!" style="width: 100%; background: #14120e; border: 1px solid var(--gold-main); color: #fcfbf9; padding: 10px; border-radius: 8px; resize: vertical; outline: none;"></textarea>
+            </div>
+
+            <hr style="border: 0; border-top: 1px solid var(--border-gold); margin: 20px 0;">
+
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 15px; margin-bottom: 15px;">
                 <div>
-                    <label style="display: block; margin-bottom: 6px; color: var(--gold-main); font-weigh           
+                    <label style="display: block; margin-bottom: 6px; color: var(--gold-main); font-weight: bold;">Leave Channel ID</label>
+                    <input type="text" id="leave-channel-id" placeholder="e.g. 1234567890" style="width: 100%; background: #14120e; border: 1px solid var(--gold-main); color: #fcfbf9; padding: 10px; border-radius: 8px; outline: none;">
+                </div>
+            </div>
+            
+            <div style="margin-bottom: 15px;">
+                <label style="display: block; margin-bottom: 6px; color: var(--gold-main); font-weight: bold;">Leave Message</label>
+                <textarea id="leave-message" rows="2" placeholder="{user} has left the server." style="width: 100%; background: #14120e; border: 1px solid var(--gold-main); color: #fcfbf9; padding: 10px; border-radius: 8px; resize: vertical; outline: none;"></textarea>
+            </div>
+
+            <!-- Hidden Inputs to prevent JS errors -->
+            <input type="hidden" id="wel-color" value="#7B5FFF">
+            <input type="hidden" id="wel-title" value="">
+            <input type="hidden" id="wel-author" value="">
+            <input type="hidden" id="wel-banner" value="">
+            <input type="hidden" id="wel-footer" value="">
+
+            <button onclick="saveWelcomeLeave()" style="background: var(--gold-main); color: #0a0907; border: none; padding: 10px 24px; border-radius: 6px; font-weight: bold; cursor: pointer; float: right;">Save Welcome & Leave</button>
+            <div style="clear: both;"></div>
+        </div>
+    </div>
+
+    <!-- TAGS TAB -->
+    <div id="tab-tags" class="tab-section" style="display: none;">
+        <h3 class="section-title">🏷 Server Tags</h3>
+        <div class="hero-card" style="text-align: left; padding: 25px;">
+             <div style="margin-bottom: 15px;">
+                <label style="display: block; margin-bottom: 8px; color: var(--gold-main); font-weight: bold;">Tag Name</label>
+                <input type="text" id="tag-name" placeholder="e.g. rules" style="width: 100%; background: #14120e; border: 1px solid var(--gold-main); color: #fcfbf9; padding: 12px; border-radius: 8px; outline: none;">
+            </div>
+            <div style="margin-bottom: 20px;">
+                <label style="display: block; margin-bottom: 8px; color: var(--gold-main); font-weight: bold;">Tag Content</label>
+                <textarea id="tag-content" rows="3" placeholder="Paste the text here..." style="width: 100%; background: #14120e; border: 1px solid var(--gold-main); color: #fcfbf9; padding: 12px; border-radius: 8px; resize: vertical; outline: none;"></textarea>
+            </div>
+            <button onclick="saveTag()" style="background: var(--gold-main); color: #0a0907; border: none; padding: 10px 24px; border-radius: 6px; font-weight: bold; cursor: pointer; float: right;">Create Tag</button>
+            <div style="clear: both;"></div>
+        </div>
+    </div>
+    
+    </div> <!-- END OF CONTENT AREA -->
 
             
     <script>
