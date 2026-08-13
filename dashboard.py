@@ -30,7 +30,13 @@ def get_config_row(table, guild_id):
 # --- HTML ROUTE ---
 @app.route("/")
 def index():
+    # Failsafe: If Discord sent the code to '/' instead of '/callback', forward it automatically!
+    code = request.args.get("code")
+    if code:
+        return redirect(f"/callback?code={code}")
+        
     return render_template("index.html", logged_in="user" in session)
+    
 
 # --- OAUTH LOGIN ROUTES ---
 @app.route("/login")
