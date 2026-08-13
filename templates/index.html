@@ -64,9 +64,9 @@
                 </div>
             </header>
 
-            <div class="content-area" onclick="closeMenu()">
+             <div class="content-area" onclick="closeMenu()">
     
-    <!-- HOME TAB (Your current dashboard) -->
+    <!-- HOME TAB -->
     <div id="tab-home" class="tab-section">
         <div class="hero-card">
             <h4 class="hero-subtitle">✦ LIVE SERVER STATS</h4>
@@ -119,8 +119,26 @@
         </div>
     </div>
 
-    
-                    <!-- COMMANDS TAB -->
+    <!-- GENERAL TAB -->
+    <div id="tab-general" class="tab-section" style="display: none;">
+        <h3 class="section-title">⚙ General Settings</h3>
+        <div class="hero-card" style="text-align: left; padding: 25px;">
+            <div style="margin-bottom: 20px;">
+                <label style="display: block; margin-bottom: 8px; color: var(--gold-main); font-weight: bold;">Log Channel ID</label>
+                <input type="text" id="gen-log-channel" placeholder="e.g. 123456789012345678" style="width: 100%; max-width: 400px; background: #14120e; border: 1px solid var(--gold-main); color: #fcfbf9; padding: 12px; border-radius: 8px; outline: none;">
+                <p style="margin: 5px 0 0 0; color: var(--text-muted); font-size: 0.85rem;">Channel where server audit logs and events will be posted.</p>
+            </div>
+            <div style="margin-bottom: 20px;">
+                <label style="display: block; margin-bottom: 8px; color: var(--gold-main); font-weight: bold;">Autorole Role ID</label>
+                <input type="text" id="gen-autorole-id" placeholder="e.g. 123456789012345678" style="width: 100%; max-width: 400px; background: #14120e; border: 1px solid var(--gold-main); color: #fcfbf9; padding: 12px; border-radius: 8px; outline: none;">
+                <p style="margin: 5px 0 0 0; color: var(--text-muted); font-size: 0.85rem;">Role assigned automatically to new members upon joining.</p>
+            </div>
+            <button onclick="saveGeneral()" style="background: var(--gold-main); color: #0a0907; border: none; padding: 10px 24px; border-radius: 6px; font-weight: bold; cursor: pointer; float: right;">Save General Settings</button>
+            <div style="clear: both;"></div>
+        </div>
+    </div>
+
+    <!-- COMMANDS TAB -->
     <div id="tab-commands" class="tab-section" style="display: none;">
         <h3 class="section-title">❯_ Custom Commands</h3>
         <div class="hero-card" style="text-align: left; padding: 25px;">
@@ -132,27 +150,103 @@
                 <label style="display: block; margin-bottom: 8px; color: var(--gold-main); font-weight: bold;">Bot Reply</label>
                 <textarea id="cmd-content" rows="3" placeholder="What should the bot say when someone types this?" style="width: 100%; background: #14120e; border: 1px solid var(--gold-main); color: #fcfbf9; padding: 12px; border-radius: 8px; resize: vertical; outline: none;"></textarea>
             </div>
-            <button onclick="saveCommand()" style="background: var(--gold-main); color: #0a0907; border: none; padding: 10px 24px; border-radius: 6px; font-weight: bold; cursor: pointer; float: right; transition: all 0.2s;">Add Command</button>
+            <button onclick="saveCommand()" style="background: var(--gold-main); color: #0a0907; border: none; padding: 10px 24px; border-radius: 6px; font-weight: bold; cursor: pointer; float: right;">Add Command</button>
             <div style="clear: both;"></div>
+        </div>
+    </div>
+
+    <!-- AUTOMOD TAB -->
+    <div id="tab-automod" class="tab-section" style="display: none;">
+        <h3 class="section-title">🛡 AutoMod Settings</h3>
+        <div class="hero-card" style="text-align: left; padding: 25px; margin-bottom: 20px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                <div>
+                    <h2 style="margin: 0; color: var(--gold-main); font-size: 1.1rem;">Enable AutoMod</h2>
+                    <p style="margin: 3px 0 0 0; color: var(--text-muted); font-size: 0.85rem;">Automatically filters bad words and mass mentions.</p>
+                </div>
+                <input type="checkbox" id="automod-toggle">
+            </div>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                <div>
+                    <h2 style="margin: 0; color: var(--gold-main); font-size: 1.1rem;">Block Invites</h2>
+                    <p style="margin: 3px 0 0 0; color: var(--text-muted); font-size: 0.85rem;">Deletes Discord server invite links in chat.</p>
+                </div>
+                <input type="checkbox" id="automod-block-invites">
+            </div>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <div>
+                    <h2 style="margin: 0; color: var(--gold-main); font-size: 1.1rem;">Block Staff Mentions</h2>
+                    <p style="margin: 3px 0 0 0; color: var(--text-muted); font-size: 0.85rem;">Deletes pings targeting moderators or administrators.</p>
+                </div>
+                <input type="checkbox" id="automod-block-staff">
+            </div>
+            <button onclick="saveAutoMod()" style="background: var(--gold-main); color: #0a0907; border: none; padding: 10px 24px; border-radius: 6px; font-weight: bold; cursor: pointer; float: right;">Save AutoMod Toggles</button>
+            <div style="clear: both;"></div>
+        </div>
+
+        <div class="hero-card" style="text-align: left; padding: 25px;">
+            <h2 style="margin: 0 0 10px 0; color: var(--gold-main); font-size: 1.1rem;">Banned Words List</h2>
+            <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+                <input type="text" id="automod-words-input" placeholder="Enter words separated by commas (e.g. badword1, badword2)" style="flex: 1; background: #14120e; border: 1px solid var(--gold-main); color: #fcfbf9; padding: 12px; border-radius: 8px; outline: none;">
+                <button onclick="addBannedWords()" style="background: var(--gold-main); color: #0a0907; border: none; padding: 10px 20px; border-radius: 6px; font-weight: bold; cursor: pointer;">Add Words</button>
+            </div>
+            <div id="banned-words-list" style="display: flex; flex-wrap: wrap; gap: 8px; background: #14120e; padding: 15px; border-radius: 8px; border: 1px solid var(--border-gold);">
+                <span style="color: var(--text-muted);">No banned words configured.</span>
+            </div>
         </div>
     </div>
 
     <!-- ANTI-NUKE TAB -->
     <div id="tab-antinuke" class="tab-section" style="display: none;">
         <h3 class="section-title">☢ Anti-Nuke Settings</h3>
-        <div class="hero-card" style="text-align: left; padding: 25px;">
+        <div class="hero-card" style="text-align: left; padding: 25px; margin-bottom: 20px;">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
                 <div>
-                    <h2 style="margin: 0; color: var(--gold-main); font-size: 1.2rem;">Enable Anti-Nuke</h2>
-                    <p style="margin: 5px 0 0 0; color: var(--text-muted); font-size: 0.9rem;">Prevent unauthorized mass channel deletions, kicks, and bans.</p>
+                    <h2 style="margin: 0; color: var(--gold-main); font-size: 1.1rem;">Enable Anti-Nuke</h2>
+                    <p style="margin: 3px 0 0 0; color: var(--text-muted); font-size: 0.85rem;">Prevent unauthorized mass channel deletions, kicks, and bans.</p>
                 </div>
-                <label class="switch">
-                  <input type="checkbox" id="antinuke-toggle">
-                  <span class="slider round"></span>
-                </label>
+                <input type="checkbox" id="antinuke-toggle">
             </div>
-            <button onclick="saveAntiNuke()" style="background: var(--gold-main); color: #0a0907; border: none; padding: 10px 24px; border-radius: 6px; font-weight: bold; cursor: pointer; float: right; transition: all 0.2s;">Save Changes</button>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 15px; margin-bottom: 20px;">
+                <div>
+                    <label style="display: block; margin-bottom: 6px; color: var(--gold-main); font-weight: bold;">Log Channel ID</label>
+                    <input type="text" id="antinuke-log-chan" placeholder="e.g. 123456789012345678" style="width: 100%; background: #14120e; border: 1px solid var(--gold-main); color: #fcfbf9; padding: 10px; border-radius: 8px;">
+                </div>
+                <div>
+                    <label style="display: block; margin-bottom: 6px; color: var(--gold-main); font-weight: bold;">Punishment Action</label>
+                    <select id="antinuke-action" style="width: 100%; background: #14120e; border: 1px solid var(--gold-main); color: #fcfbf9; padding: 10px; border-radius: 8px;">
+                        <option value="kick">Kick offender</option>
+                        <option value="ban">Ban offender</option>
+                    </select>
+                </div>
+                <div>
+                    <label style="display: block; margin-bottom: 6px; color: var(--gold-main); font-weight: bold;">Ban Threshold (in 10s)</label>
+                    <input type="number" id="antinuke-ban-thresh" value="3" style="width: 100%; background: #14120e; border: 1px solid var(--gold-main); color: #fcfbf9; padding: 10px; border-radius: 8px;">
+                </div>
+                <div>
+                    <label style="display: block; margin-bottom: 6px; color: var(--gold-main); font-weight: bold;">Channel Delete Threshold</label>
+                    <input type="number" id="antinuke-chan-thresh" value="3" style="width: 100%; background: #14120e; border: 1px solid var(--gold-main); color: #fcfbf9; padding: 10px; border-radius: 8px;">
+                </div>
+                <div>
+                    <label style="display: block; margin-bottom: 6px; color: var(--gold-main); font-weight: bold;">Role Delete Threshold</label>
+                    <input type="number" id="antinuke-role-thresh" value="3" style="width: 100%; background: #14120e; border: 1px solid var(--gold-main); color: #fcfbf9; padding: 10px; border-radius: 8px;">
+                </div>
+            </div>
+            
+            <button onclick="saveAntiNuke()" style="background: var(--gold-main); color: #0a0907; border: none; padding: 10px 24px; border-radius: 6px; font-weight: bold; cursor: pointer; float: right;">Save Anti-Nuke Settings</button>
             <div style="clear: both;"></div>
+        </div>
+
+        <div class="hero-card" style="text-align: left; padding: 25px;">
+            <h2 style="margin: 0 0 10px 0; color: var(--gold-main); font-size: 1.1rem;">Anti-Nuke Whitelist</h2>
+            <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+                <input type="text" id="antinuke-wl-input" placeholder="User ID to exempt (e.g. 123456789012345678)" style="flex: 1; background: #14120e; border: 1px solid var(--gold-main); color: #fcfbf9; padding: 12px; border-radius: 8px; outline: none;">
+                <button onclick="addAntiNukeWL()" style="background: var(--gold-main); color: #0a0907; border: none; padding: 10px 20px; border-radius: 6px; font-weight: bold; cursor: pointer;">Add User ID</button>
+            </div>
+            <div id="antinuke-wl-list" style="display: flex; flex-wrap: wrap; gap: 8px; background: #14120e; padding: 15px; border-radius: 8px; border: 1px solid var(--border-gold);">
+                <span style="color: var(--text-muted);">No whitelisted users.</span>
+            </div>
         </div>
     </div>
 
@@ -162,15 +256,40 @@
         <div class="hero-card" style="text-align: left; padding: 25px;">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
                 <div>
-                    <h2 style="margin: 0; color: var(--gold-main); font-size: 1.2rem;">Enable Anti-Raid</h2>
-                    <p style="margin: 5px 0 0 0; color: var(--text-muted); font-size: 0.9rem;">Automatically lock down the server if a bot wave joins.</p>
+                    <h2 style="margin: 0; color: var(--gold-main); font-size: 1.1rem;">Enable Anti-Raid</h2>
+                    <p style="margin: 3px 0 0 0; color: var(--text-muted); font-size: 0.85rem;">Automatically kick, ban, or lockdown server if a bot wave joins.</p>
                 </div>
-                <label class="switch">
-                  <input type="checkbox" id="antiraid-toggle">
-                  <span class="slider round"></span>
-                </label>
+                <input type="checkbox" id="antiraid-toggle">
             </div>
-            <button onclick="saveAntiRaid()" style="background: var(--gold-main); color: #0a0907; border: none; padding: 10px 24px; border-radius: 6px; font-weight: bold; cursor: pointer; float: right; transition: all 0.2s;">Save Changes</button>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 15px; margin-bottom: 20px;">
+                <div>
+                    <label style="display: block; margin-bottom: 6px; color: var(--gold-main); font-weight: bold;">Log Channel ID</label>
+                    <input type="text" id="antiraid-log-chan" placeholder="e.g. 123456789012345678" style="width: 100%; background: #14120e; border: 1px solid var(--gold-main); color: #fcfbf9; padding: 10px; border-radius: 8px;">
+                </div>
+                <div>
+                    <label style="display: block; margin-bottom: 6px; color: var(--gold-main); font-weight: bold;">Raid Action</label>
+                    <select id="antiraid-action" style="width: 100%; background: #14120e; border: 1px solid var(--gold-main); color: #fcfbf9; padding: 10px; border-radius: 8px;">
+                        <option value="kick">Kick raiders</option>
+                        <option value="ban">Ban raiders</option>
+                        <option value="lockdown">Lockdown server</option>
+                    </select>
+                </div>
+                <div>
+                    <label style="display: block; margin-bottom: 6px; color: var(--gold-main); font-weight: bold;">Join Threshold</label>
+                    <input type="number" id="antiraid-joins" value="10" style="width: 100%; background: #14120e; border: 1px solid var(--gold-main); color: #fcfbf9; padding: 10px; border-radius: 8px;">
+                </div>
+                <div>
+                    <label style="display: block; margin-bottom: 6px; color: var(--gold-main); font-weight: bold;">Join Window (seconds)</label>
+                    <input type="number" id="antiraid-window" value="10" style="width: 100%; background: #14120e; border: 1px solid var(--gold-main); color: #fcfbf9; padding: 10px; border-radius: 8px;">
+                </div>
+                <div>
+                    <label style="display: block; margin-bottom: 6px; color: var(--gold-main); font-weight: bold;">Min Account Age (days)</label>
+                    <input type="number" id="antiraid-min-age" value="7" style="width: 100%; background: #14120e; border: 1px solid var(--gold-main); color: #fcfbf9; padding: 10px; border-radius: 8px;">
+                </div>
+            </div>
+
+            <button onclick="saveAntiRaid()" style="background: var(--gold-main); color: #0a0907; border: none; padding: 10px 24px; border-radius: 6px; font-weight: bold; cursor: pointer; float: right;">Save Anti-Raid Settings</button>
             <div style="clear: both;"></div>
         </div>
     </div>
@@ -196,7 +315,7 @@
                 <input type="text" id="rr-emoji" placeholder="Emoji (e.g. 👍)" style="flex: 1; background: #14120e; border: 1px solid var(--gold-main); color: #fcfbf9; padding: 12px; border-radius: 8px; outline: none;">
                 <input type="text" id="rr-role" placeholder="Role ID" style="flex: 2; background: #14120e; border: 1px solid var(--gold-main); color: #fcfbf9; padding: 12px; border-radius: 8px; outline: none;">
             </div>
-            <button onclick="saveRR()" style="background: var(--gold-main); color: #0a0907; border: none; padding: 10px 24px; border-radius: 6px; font-weight: bold; cursor: pointer; float: right; transition: all 0.2s;">Create Reaction Role</button>
+            <button onclick="saveRR()" style="background: var(--gold-main); color: #0a0907; border: none; padding: 10px 24px; border-radius: 6px; font-weight: bold; cursor: pointer; float: right;">Create Reaction Role</button>
             <div style="clear: both;"></div>
         </div>
     </div>
@@ -204,44 +323,23 @@
     <!-- WELCOME & LEAVE TAB -->
     <div id="tab-welcome" class="tab-section" style="display: none;">
         <h3 class="section-title">👋 Welcome & Leave Messages</h3>
-        <div class="hero-card" style="text-align: left; padding: 25px;">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+        <div class="hero-card" style="text-align: left; padding: 25px; margin-bottom: 20px;">
+            <h2 style="margin: 0 0 15px 0; color: var(--gold-main); font-size: 1.2rem;">Welcome Message Settings</h2>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 15px; margin-bottom: 15px;">
                 <div>
-                    <h2 style="margin: 0; color: var(--gold-main); font-size: 1.2rem;">Send Welcome Message</h2>
+                    <label style="display: block; margin-bottom: 6px; color: var(--gold-main); font-weight: bold;">Welcome Channel ID</label>
+                    <input type="text" id="wel-channel-id" placeholder="e.g. 123456789012345678" style="width: 100%; background: #14120e; border: 1px solid var(--gold-main); color: #fcfbf9; padding: 10px; border-radius: 8px;">
                 </div>
-            </div>
-            <div style="margin-bottom: 20px;">
-                <label style="display: block; margin-bottom: 8px; color: var(--gold-main); font-weight: bold;">Custom Message</label>
-                <textarea id="welcome-message" rows="3" placeholder="Welcome {user} to the server! You are member #{member_count}." style="width: 100%; background: #14120e; border: 1px solid var(--gold-main); color: #fcfbf9; padding: 12px; border-radius: 8px; resize: vertical; outline: none;"></textarea>
-                <p style="margin: 5px 0 0 0; color: var(--text-muted); font-size: 0.85rem;">Use <code>{member}</code> to ping them, and <code>{server}</code> for the server name.</p>
-            </div>
-            <button onclick="saveWelcome()" style="background: var(--gold-main); color: #0a0907; border: none; padding: 10px 24px; border-radius: 6px; font-weight: bold; cursor: pointer; float: right; transition: all 0.2s;">Save Changes</button>
-            <div style="clear: both;"></div>
-        </div>
-    </div>
-
-    <!-- TAGS TAB -->
-    <div id="tab-tags" class="tab-section" style="display: none;">
-        <h3 class="section-title">🏷 Server Tags</h3>
-        <div class="hero-card" style="text-align: left; padding: 25px;">
-             <div style="margin-bottom: 15px;">
-                <label style="display: block; margin-bottom: 8px; color: var(--gold-main); font-weight: bold;">Tag Name</label>
-                <input type="text" id="tag-name" placeholder="e.g. links" style="width: 100%; background: #14120e; border: 1px solid var(--gold-main); color: #fcfbf9; padding: 12px; border-radius: 8px; outline: none;">
-            </div>
-            <div style="margin-bottom: 20px;">
-                <label style="display: block; margin-bottom: 8px; color: var(--gold-main); font-weight: bold;">Tag Content</label>
-                <textarea id="tag-content" rows="3" placeholder="Paste the links here..." style="width: 100%; background: #14120e; border: 1px solid var(--gold-main); color: #fcfbf9; padding: 12px; border-radius: 8px; resize: vertical; outline: none;"></textarea>
-            </div>
-            <button onclick="saveTag()" style="background: var(--gold-main); color: #0a0907; border: none; padding: 10px 24px; border-radius: 6px; font-weight: bold; cursor: pointer; float: right; transition: all 0.2s;">Create Tag</button>
-            <div style="clear: both;"></div>
-        </div>
-                    </div>
-                
-                
-                
-    <!-- (You can add the rest of the tabs using this exact same format!) -->
-
-            </div>
+                <div>
+                    <label style="display: block; margin-bottom: 6px; color: var(--gold-main); font-weight: bold;">Display Style</label>
+                    <select id="wel-style" style="width: 100%; background: #14120e; border: 1px solid var(--gold-main); color: #fcfbf9; padding: 10px; border-radius: 8px;">
+                        <option value="plain">Plain Text</option>
+                        <option value="embed">Embed Card</option>
+                    </select>
+                </div>
+                <div>
+                    <label style="display: block; margin-bottom: 6px; color: var(--gold-main); font-weigh           
 
             
     <script>
@@ -331,30 +429,87 @@
         loadServerSettings(guildId); // Fetches the live settings!
     }
 
-    // --- NEW LOGIC: Load and Save Data ---
-    function loadServerSettings(guildId) {
-        fetch(`/api/guild/${guildId}/settings`)
+        function loadServerSettings(guildId) {
+        fetch(`/api/guild/${guildId}/full_settings`)
             .then(res => res.json())
             .then(data => {
                 if(data.error) return;
                 
-                document.getElementById('antinuke-toggle').checked = data.antinuke_enabled;
-                document.getElementById('antiraid-toggle').checked = data.antiraid_enabled;
-                document.getElementById('welcome-message').value = data.welcome_message || "";
+                // General
+                document.getElementById('gen-log-channel').value = data.config.log_channel_id || "";
+                document.getElementById('gen-autorole-id').value = data.config.autorole_id || "";
                 
+                // AutoMod
+                document.getElementById('automod-toggle').checked = data.config.automod_enabled;
+                document.getElementById('automod-block-invites').checked = data.config.block_invites;
+                document.getElementById('automod-block-staff').checked = data.config.block_staff_mentions;
+                
+                const wordsList = document.getElementById('banned-words-list');
+                if (data.banned_words && data.banned_words.length > 0) {
+                    wordsList.innerHTML = data.banned_words.map(w => 
+                        `<span style="background: var(--gold-dim); color: var(--gold-main); border: 1px solid var(--gold-main); padding: 4px 10px; border-radius: 15px; font-size: 0.85rem; display: flex; align-items: center; gap: 6px;">
+                            ${w} <span onclick="removeBannedWord('${w}')" style="cursor: pointer; font-weight: bold; color: #f87171;">✕</span>
+                        </span>`
+                    ).join("");
+                } else {
+                    wordsList.innerHTML = '<span style="color: var(--text-muted);">No banned words configured.</span>';
+                }
+
+                // Anti-Nuke
+                document.getElementById('antinuke-toggle').checked = data.antinuke.enabled;
+                document.getElementById('antinuke-log-chan').value = data.antinuke.log_channel_id || "";
+                document.getElementById('antinuke-action').value = data.antinuke.action || "kick";
+                document.getElementById('antinuke-ban-thresh').value = data.antinuke.ban_threshold;
+                document.getElementById('antinuke-chan-thresh').value = data.antinuke.channel_delete_threshold;
+                document.getElementById('antinuke-role-thresh').value = data.antinuke.role_delete_threshold;
+                
+                const wlList = document.getElementById('antinuke-wl-list');
+                if (data.antinuke.whitelist && data.antinuke.whitelist.length > 0) {
+                    wlList.innerHTML = data.antinuke.whitelist.map(id => 
+                        `<span style="background: #1e1b18; color: #fcfbf9; border: 1px solid var(--border-gold); padding: 4px 10px; border-radius: 15px; font-size: 0.85rem; display: flex; align-items: center; gap: 6px;">
+                            ${id} <span onclick="removeAntiNukeWL('${id}')" style="cursor: pointer; font-weight: bold; color: #f87171;">✕</span>
+                        </span>`
+                    ).join("");
+                } else {
+                    wlList.innerHTML = '<span style="color: var(--text-muted);">No whitelisted users.</span>';
+                }
+
+                // Anti-Raid
+                document.getElementById('antiraid-toggle').checked = data.antiraid.enabled;
+                document.getElementById('antiraid-log-chan').value = data.antiraid.log_channel_id || "";
+                document.getElementById('antiraid-action').value = data.antiraid.action || "kick";
+                document.getElementById('antiraid-joins').value = data.antiraid.join_threshold;
+                document.getElementById('antiraid-window').value = data.antiraid.join_window;
+                document.getElementById('antiraid-min-age').value = data.antiraid.min_account_age_days;
+
+                // Welcome & Leave
+                document.getElementById('wel-channel-id').value = data.config.welcome_channel_id || "";
+                document.getElementById('wel-style').value = data.config.welcome_style || "plain";
+                document.getElementById('wel-color').value = data.config.welcome_color || "#7B5FFF";
+                document.getElementById('wel-message').value = data.config.welcome_message || "";
+                document.getElementById('wel-title').value = data.config.welcome_title || "";
+                document.getElementById('wel-author').value = data.config.welcome_author_text || "";
+                document.getElementById('wel-banner').value = data.config.welcome_banner_url || "";
+                document.getElementById('wel-footer').value = data.config.welcome_footer_text || "";
+                document.getElementById('wel-show-count').checked = data.config.welcome_show_count;
+                
+                document.getElementById('leave-channel-id').value = data.config.leave_channel_id || "";
+                document.getElementById('leave-message').value = data.config.leave_message || "";
+
+                // Warnings
                 const warnContainer = document.getElementById('warnings-container');
-                if (data.recent_warnings && data.recent_warnings.length > 0) {
-                    warnContainer.innerHTML = data.recent_warnings.map(w => `<p style="margin-bottom:10px;">⚠️ ${w.reason} <br><span style="color:var(--gold-main); font-size:0.8em;">${w.created_at}</span></p>`).join("");
+                if (data.warnings && data.warnings.length > 0) {
+                    warnContainer.innerHTML = data.warnings.map(w => `<p style="margin-bottom:10px;">⚠️ User ID: <code>${w.user_id}</code> — ${w.reason} <br><span style="color:var(--gold-main); font-size:0.8em;">${w.created_at}</span></p>`).join("");
                 } else {
                     warnContainer.innerHTML = "<p style='text-align:center;'>No warnings have been issued yet.</p>";
                 }
             });
     }
 
-    function saveSetting(endpoint, payload) {
+    function saveModule(moduleName, payload) {
         if(!currentGuildId) return alert("Please select a server from the dropdown first!");
         
-        fetch(`/api/guild/${currentGuildId}/${endpoint}`, {
+        fetch(`/api/guild/${currentGuildId}/save_module/${moduleName}`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(payload)
@@ -363,40 +518,90 @@
         .then(data => {
             if(data.success) {
                 alert("Settings saved successfully!");
-                loadServerStats(currentGuildId); 
+                loadServerStats(currentGuildId);
+                loadServerSettings(currentGuildId);
             } else {
                 alert(data.error || "Error saving settings.");
             }
         });
     }
 
-    // Button Triggers
-    function saveAntiNuke() { saveSetting("settings", { antinuke_enabled: document.getElementById('antinuke-toggle').checked }); }
-    function saveAntiRaid() { saveSetting("settings", { antiraid_enabled: document.getElementById('antiraid-toggle').checked }); }
-    function saveWelcome() { saveSetting("settings", { welcome_message: document.getElementById('welcome-message').value }); }
-    
-    function saveCommand() {
-        const name = document.getElementById('cmd-name').value;
-        const content = document.getElementById('cmd-content').value;
-        if(!name || !content) return alert("Please fill in both command fields.");
-        saveSetting("tags", { name, content });
+    // Trigger Functions
+    function saveGeneral() {
+        saveModule("general", {
+            log_channel_id: document.getElementById('gen-log-channel').value,
+            autorole_id: document.getElementById('gen-autorole-id').value
+        });
     }
-    
-    function saveTag() {
-        const name = document.getElementById('tag-name').value;
-        const content = document.getElementById('tag-content').value;
-        if(!name || !content) return alert("Please fill in both tag fields.");
-        saveSetting("tags", { name, content });
+
+    function saveAutoMod() {
+        saveModule("automod", {
+            automod_enabled: document.getElementById('automod-toggle').checked,
+            block_invites: document.getElementById('automod-block-invites').checked,
+            block_staff_mentions: document.getElementById('automod-block-staff').checked
+        });
     }
-    
-    function saveRR() {
-        const emoji = document.getElementById('rr-emoji').value;
-        const role = document.getElementById('rr-role').value;
-        const msg = document.getElementById('rr-msg').value;
-        if(!emoji || !role || !msg) return alert("Please fill in all reaction role fields.");
-        saveSetting("reactionrole", { emoji, role_id: role, message_id: msg });
-        }
-        
+
+    function addBannedWords() {
+        const words = document.getElementById('automod-words-input').value;
+        if(!words) return;
+        saveModule("banned_words_add", { words });
+        document.getElementById('automod-words-input').value = "";
+    }
+
+    function removeBannedWord(word) {
+        saveModule("banned_words_remove", { word });
+    }
+
+    function saveAntiNuke() {
+        saveModule("antinuke", {
+            enabled: document.getElementById('antinuke-toggle').checked,
+            log_channel_id: document.getElementById('antinuke-log-chan').value,
+            action: document.getElementById('antinuke-action').value,
+            ban_threshold: document.getElementById('antinuke-ban-thresh').value,
+            channel_delete_threshold: document.getElementById('antinuke-chan-thresh').value,
+            role_delete_threshold: document.getElementById('antinuke-role-thresh').value
+        });
+    }
+
+    function addAntiNukeWL() {
+        const user_id = document.getElementById('antinuke-wl-input').value;
+        if(!user_id) return;
+        saveModule("antinuke_wl_add", { user_id });
+        document.getElementById('antinuke-wl-input').value = "";
+    }
+
+    function removeAntiNukeWL(user_id) {
+        saveModule("antinuke_wl_remove", { user_id });
+    }
+
+    function saveAntiRaid() {
+        saveModule("antiraid", {
+            enabled: document.getElementById('antiraid-toggle').checked,
+            log_channel_id: document.getElementById('antiraid-log-chan').value,
+            action: document.getElementById('antiraid-action').value,
+            join_threshold: document.getElementById('antiraid-joins').value,
+            join_window: document.getElementById('antiraid-window').value,
+            min_account_age_days: document.getElementById('antiraid-min-age').value
+        });
+    }
+
+    function saveWelcomeLeave() {
+        saveModule("welcome_leave", {
+            welcome_channel_id: document.getElementById('wel-channel-id').value,
+            welcome_style: document.getElementById('wel-style').value,
+            welcome_color: document.getElementById('wel-color').value,
+            welcome_message: document.getElementById('wel-message').value,
+            welcome_title: document.getElementById('wel-title').value,
+            welcome_author_text: document.getElementById('wel-author').value,
+            welcome_banner_url: document.getElementById('wel-banner').value,
+            welcome_footer_text: document.getElementById('wel-footer').value,
+            welcome_show_count: document.getElementById('wel-show-count').checked,
+            leave_channel_id: document.getElementById('leave-channel-id').value,
+            leave_message: document.getElementById('leave-message').value
+        });
+    }
+                        
 
     // 3. Fetch Live Server Stats
     function loadServerStats(guildId) {
