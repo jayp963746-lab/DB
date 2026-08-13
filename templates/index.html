@@ -601,6 +601,27 @@
             leave_message: document.getElementById('leave-message').value
         });
     }
+           function saveCommand() {
+        const name = document.getElementById('cmd-name').value;
+        const content = document.getElementById('cmd-content').value;
+        if(!name || !content) return alert("Please fill in both fields.");
+        saveModule("tags", { name, content });
+    }
+
+    function saveTag() {
+        const name = document.getElementById('tag-name').value;
+        const content = document.getElementById('tag-content').value;
+        if(!name || !content) return alert("Please fill in both fields.");
+        saveModule("tags", { name, content });
+    }
+
+    function saveRR() {
+        const emoji = document.getElementById('rr-emoji').value;
+        const role = document.getElementById('rr-role').value;
+        const msg = document.getElementById('rr-msg').value;
+        if(!emoji || !role || !msg) return alert("Please fill in all fields.");
+        saveModule("reactionrole", { emoji, role_id: role, message_id: msg });
+    }
                         
 
     // 3. Fetch Live Server Stats
