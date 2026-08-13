@@ -43,9 +43,16 @@
             <header class="top-header">
                 <div class="header-left">
                     <button class="mobile-menu-btn" onclick="toggleMenu()">☰</button>
-                    <select id="server-select" class="server-dropdown" onchange="loadServerStats()">
-                        <option value="">Select a Server...</option>
-                    </select>
+                    <div class="custom-dropdown" id="server-dropdown">
+    <div class="dropdown-selected" onclick="toggleDropdown(event)">
+        <span id="selected-server-name">Select a Server...</span>
+        <span class="dropdown-arrow">▼</span>
+    </div>
+    <div class="dropdown-menu" id="dropdown-menu">
+        <div class="dropdown-option muted">Loading servers...</div>
+    </div>
+                    </div>
+                    
                 </div>
                 <div class="header-right">
                     <div class="status-indicator"><span class="dot">●</span> Connected</div>
@@ -80,30 +87,7 @@
                     <div class="stat-card">
                         <span class="stat-label">Tags</span>
                         <span class="stat-value" id="stat-tags">—</span>
-                    </div>
-                </div>
-
-                <h3 class="section-title">Protection modules</h3>
-                <div class="module-list">
-                    <div class="module-item">
-                        <div class="module-info">
-                            <h3>AutoMod</h3>
-                            <p>Automatically filters bad words and spam.</p>
-                        </div>
-                        <div class="module-status" id="status-automod">Off</div>
-                    </div>
-                    <div class="module-item">
-                        <div class="module-info">
-                            <h3>Anti-Nuke</h3>
-                            <p>Prevents mass channel deletion and bans.</p>
-                        </div>
-                        <div class="module-status" id="status-antinuke">Off</div>
-                    </div>
-                    <div class="module-item">
-                        <div class="module-info">
-                            <h3>Anti-Raid</h3>
-                            <p>Locks down the server during mass join attacks.</p>
-                        </div>
+               </div>
                         <div class="module-status" id="status-antiraid">Off</div>
                     </div>
                 </div>
@@ -127,33 +111,91 @@
                 }
 
                 const select = document.getElementById('server-select');
-                data.guilds.forEach(guild => {
-                    const option = document.createElement('option');
-                    option.value = guild.id;
-                    option.innerText = guild.name;
-                    select.appendChild(option);
-                });
-            });
+<script>
+    function toggleMenu() { document.getElementById('sidebar').classList.toggle('open'); }
+    function closeMenu() { document.getElementById('sidebar').classList.remove('open'); }
 
-        function loadServerStats() {
-            const guildId = document.getElementById('server-select').value;
-            if(!guildId) return;
+    function toggleDropdown(e) {
+        if(e) e.stopPropagation();
+        document.getElementById('server-dropdown').classList.toggle('open');
+    }
+
+    // Close custom dropdown when tapping outside
+    document.addEventListener('click', function(e) {
+        const dropdown = document.getElementById('server-dropdown');
+        if (dropdown && !dropdown.contains(e.target)) {
+            dropdown.classList.remove('open');
+        }
+    });
+
+    {% if logged_in %}
+    fetch('/api/user')
+        .then(response => response.json())
+        .then(data => {
+            if(data.error) return;
             
-            fetch(`/api/guild/${guildId}/overview`)
-                .then(response => response.json())
-                .then(data => {
-                    if(data.error) return;
-                    document.getElementById('stat-members').innerText = data.members || "—";
-                    document.getElementById('stat-warnings').innerText = data.warnings_issued || "0";
-                    document.getElementById('stat-giveaways').innerText = data.active_giveaways || "0";
-                    document.getElementById('stat-tags').innerText = data.tags || "0";
-                    
-                    const setStatus = (id, isOn) => {
-                        const el = document.getElementById(id);
-                        el.innerText = isOn ? "Active" : "Off";
-                        el.style.color = isOn ? "#4ade80" : "var(--text-muted)";
-                    };
-                    
+            document.getElementById('user-name').innerText = data.user.username;
+            if(data.user.avatar) {
+                document.getElementById('user-avatar').src = `https://cdn.discordapp.com/avatars/${data.user.id}/${data.user.avatar}.png`;
+            }
+
+            const menu = document.getElementById('dropdown-menu');
+            menu.innerHTML = '';
+
+            if(!data.guilds || data.guilds.length === 0) {
+                menu.innerHTML = '<div class="dropdown-option muted">No servers found</div>';
+                return;
+            }
+
+            data.guilds.forEach(guild => {
+                const item = document.createElement('div');
+                item.className = 'dropdown-option';
+                item.innerText = guild.name;
+                item.onclick = function(e) {
+                    e.stopPropagation();
+                    selectGuild(guild.id, guild.name);
+                };
+                menu.appendChild(item);
+            });
+        });
+
+    function selectGuild(guildId, guildName) {
+        document.getElementById('selected-server-name').innerText = guildName;
+        document.getElementById('server-dropdown').classList.remove('open');
+
+        document.querySelectorAll('.dropdown-option').forEach(opt => {
+            opt.classList.toggle('selected', opt.innerText === guildName);
+        });
+
+        loadServerStats(guildId);
+    }
+
+    function loadServerStats(guildId) {
+        if(!guildId) return;
+        
+        fetch(`/api/guild/${guildId}/overview`)
+            .then(response => response.json())
+            .then(data => {
+                if(data.error) return;
+                document.getElementById('stat-members').innerText = data.members || "—";
+                document.getElementById('stat-warnings').innerText = data.warnings_issued || "0";
+                document.getElementById('stat-giveaways').innerText = data.active_giveaways || "0";
+                document.getElementById('stat-tags').innerText = data.tags || "0";
+                
+                const setStatus = (id, isOn) => {
+                    const el = document.getElementById(id);
+                    el.innerText = isOn ? "Active" : "Off";
+                    el.style.color = isOn ? "#4ade80" : "var(--text-muted)";
+                };
+                
+                setStatus('status-automod', data.automod_on);
+                setStatus('status-antinuke', data.antinuke_on);
+                setStatus('status-antiraid', data.antiraid_on);
+            });
+    }
+    {% endif %}
+</script>
+    
                     setStatus('status-automod', data.automod_on);
                     setStatus('status-antinuke', data.antinuke_on);
                     setStatus('status-antiraid', data.antiraid_on);
