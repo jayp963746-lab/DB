@@ -119,76 +119,142 @@
         </div>
     </div>
 
-    <!-- GENERAL TAB -->
+    
+        <!-- GENERAL TAB -->
     <div id="tab-general" class="tab-section" style="display: none;">
         <h3 class="section-title">⚙ General Settings</h3>
-        <div class="hero-card">
-            <p>This page is ready to be built! We can add prefix settings and bot toggles here.</p>
+        <div class="hero-card" style="text-align: left; padding: 25px;">
+            <div style="margin-bottom: 20px;">
+                <label style="display: block; margin-bottom: 8px; color: var(--gold-main); font-weight: bold;">Bot Prefix</label>
+                <input type="text" id="general-prefix" placeholder="e.g. !" style="width: 100%; max-width: 200px; background: #14120e; border: 1px solid var(--gold-main); color: #fcfbf9; padding: 12px; border-radius: 8px; outline: none;">
+                <p style="margin: 5px 0 0 0; color: var(--text-muted); font-size: 0.85rem;">The character used to trigger bot commands in chat.</p>
+            </div>
+            <button style="background: var(--gold-main); color: #0a0907; border: none; padding: 10px 24px; border-radius: 6px; font-weight: bold; cursor: pointer; float: right; transition: all 0.2s;">Save Changes</button>
+            <div style="clear: both;"></div>
         </div>
     </div>
 
-    <!-- AUTOMOD TAB -->
-    <div id="tab-automod" class="tab-section" style="display: none;">
-        <h3 class="section-title">🛡 AutoMod Configuration</h3>
-        <div class="hero-card">
-            <p>This is where we will add the toggle switches and bad word list editor.</p>
-        </div>
-    </div>
-        <!-- COMMANDS TAB -->
+    <!-- COMMANDS TAB -->
     <div id="tab-commands" class="tab-section" style="display: none;">
         <h3 class="section-title">❯_ Custom Commands</h3>
-        <div class="hero-card">
-            <p>Here you will be able to create, edit, and delete custom text commands for your server.</p>
+        <div class="hero-card" style="text-align: left; padding: 25px;">
+            <div style="margin-bottom: 15px;">
+                <label style="display: block; margin-bottom: 8px; color: var(--gold-main); font-weight: bold;">Command Trigger</label>
+                <input type="text" placeholder="e.g. rules" style="width: 100%; background: #14120e; border: 1px solid var(--gold-main); color: #fcfbf9; padding: 12px; border-radius: 8px; outline: none;">
+            </div>
+            <div style="margin-bottom: 20px;">
+                <label style="display: block; margin-bottom: 8px; color: var(--gold-main); font-weight: bold;">Bot Reply</label>
+                <textarea rows="3" placeholder="What should the bot say when someone types this?" style="width: 100%; background: #14120e; border: 1px solid var(--gold-main); color: #fcfbf9; padding: 12px; border-radius: 8px; resize: vertical; outline: none;"></textarea>
+            </div>
+            <button style="background: var(--gold-main); color: #0a0907; border: none; padding: 10px 24px; border-radius: 6px; font-weight: bold; cursor: pointer; float: right; transition: all 0.2s;">Add Command</button>
+            <div style="clear: both;"></div>
         </div>
     </div>
 
     <!-- ANTI-NUKE TAB -->
     <div id="tab-antinuke" class="tab-section" style="display: none;">
         <h3 class="section-title">☢ Anti-Nuke Settings</h3>
-        <div class="hero-card">
-            <p>Configure limits for channel deletions, mass bans, and role modifications to protect your server.</p>
+        <div class="hero-card" style="text-align: left; padding: 25px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <div>
+                    <h2 style="margin: 0; color: var(--gold-main); font-size: 1.2rem;">Enable Anti-Nuke</h2>
+                    <p style="margin: 5px 0 0 0; color: var(--text-muted); font-size: 0.9rem;">Prevent unauthorized mass channel deletions, kicks, and bans.</p>
+                </div>
+                <label class="switch">
+                  <input type="checkbox" id="antinuke-toggle">
+                  <span class="slider round"></span>
+                </label>
+            </div>
+            <button style="background: var(--gold-main); color: #0a0907; border: none; padding: 10px 24px; border-radius: 6px; font-weight: bold; cursor: pointer; float: right; transition: all 0.2s;">Save Changes</button>
+            <div style="clear: both;"></div>
         </div>
     </div>
 
     <!-- ANTI-RAID TAB -->
     <div id="tab-antiraid" class="tab-section" style="display: none;">
         <h3 class="section-title">⚔ Anti-Raid Configuration</h3>
-        <div class="hero-card">
-            <p>Set up automatic server lockdowns and panic modes when too many users join at once.</p>
+        <div class="hero-card" style="text-align: left; padding: 25px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <div>
+                    <h2 style="margin: 0; color: var(--gold-main); font-size: 1.2rem;">Enable Anti-Raid</h2>
+                    <p style="margin: 5px 0 0 0; color: var(--text-muted); font-size: 0.9rem;">Automatically lock down the server if a bot wave joins.</p>
+                </div>
+                <label class="switch">
+                  <input type="checkbox" id="antiraid-toggle">
+                  <span class="slider round"></span>
+                </label>
+            </div>
+            <button style="background: var(--gold-main); color: #0a0907; border: none; padding: 10px 24px; border-radius: 6px; font-weight: bold; cursor: pointer; float: right; transition: all 0.2s;">Save Changes</button>
+            <div style="clear: both;"></div>
         </div>
     </div>
 
     <!-- WARNINGS TAB -->
     <div id="tab-warnings" class="tab-section" style="display: none;">
         <h3 class="section-title">⚠ Warning System</h3>
-        <div class="hero-card">
-            <p>View the warning logs for this server and set up automatic punishments (mute, kick, ban) based on warning thresholds.</p>
+        <div class="hero-card" style="text-align: left; padding: 25px;">
+            <h2 style="margin: 0 0 15px 0; color: var(--gold-main); font-size: 1.2rem;">Recent Warnings</h2>
+            <div style="background: #14120e; border: 1px solid var(--border-gold); border-radius: 8px; padding: 20px; text-align: center; color: var(--text-muted);">
+                <p>No warnings have been issued yet.</p>
+            </div>
         </div>
     </div>
 
     <!-- REACTION ROLES TAB -->
     <div id="tab-reactionroles" class="tab-section" style="display: none;">
         <h3 class="section-title">☺ Reaction Roles</h3>
-        <div class="hero-card">
-            <p>Create embed messages where users can click emojis to automatically receive server roles.</p>
+        <div class="hero-card" style="text-align: left; padding: 25px;">
+            <p style="color: var(--text-muted); margin-bottom: 20px;">Bind a server role to a specific emoji. Users will get the role when they react.</p>
+            <div style="display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap;">
+                <input type="text" placeholder="Emoji (e.g. 👍)" style="flex: 1; background: #14120e; border: 1px solid var(--gold-main); color: #fcfbf9; padding: 12px; border-radius: 8px; outline: none;">
+                <input type="text" placeholder="Role ID" style="flex: 2; background: #14120e; border: 1px solid var(--gold-main); color: #fcfbf9; padding: 12px; border-radius: 8px; outline: none;">
+            </div>
+            <button style="background: var(--gold-main); color: #0a0907; border: none; padding: 10px 24px; border-radius: 6px; font-weight: bold; cursor: pointer; float: right; transition: all 0.2s;">Create Reaction Role</button>
+            <div style="clear: both;"></div>
         </div>
     </div>
 
     <!-- WELCOME & LEAVE TAB -->
     <div id="tab-welcome" class="tab-section" style="display: none;">
         <h3 class="section-title">👋 Welcome & Leave Messages</h3>
-        <div class="hero-card">
-            <p>Set up custom welcome channels, custom text formatting, and image welcome cards for new members.</p>
+        <div class="hero-card" style="text-align: left; padding: 25px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <div>
+                    <h2 style="margin: 0; color: var(--gold-main); font-size: 1.2rem;">Send Welcome Message</h2>
+                </div>
+                <label class="switch">
+                  <input type="checkbox" id="welcome-toggle">
+                  <span class="slider round"></span>
+                </label>
+            </div>
+            <hr style="border: 0; border-top: 1px solid var(--border-gold); margin: 20px 0;">
+            <div style="margin-bottom: 20px;">
+                <label style="display: block; margin-bottom: 8px; color: var(--gold-main); font-weight: bold;">Custom Message</label>
+                <textarea rows="3" placeholder="Welcome {user} to the server! You are member #{member_count}." style="width: 100%; background: #14120e; border: 1px solid var(--gold-main); color: #fcfbf9; padding: 12px; border-radius: 8px; resize: vertical; outline: none;"></textarea>
+                <p style="margin: 5px 0 0 0; color: var(--text-muted); font-size: 0.85rem;">Use <code>{user}</code> to ping them, and <code>{server}</code> for the server name.</p>
+            </div>
+            <button style="background: var(--gold-main); color: #0a0907; border: none; padding: 10px 24px; border-radius: 6px; font-weight: bold; cursor: pointer; float: right; transition: all 0.2s;">Save Changes</button>
+            <div style="clear: both;"></div>
         </div>
     </div>
 
     <!-- TAGS TAB -->
     <div id="tab-tags" class="tab-section" style="display: none;">
         <h3 class="section-title">🏷 Server Tags</h3>
-        <div class="hero-card">
-            <p>Manage your server's automated text tags and quick-reply snippets.</p>
+        <div class="hero-card" style="text-align: left; padding: 25px;">
+             <div style="margin-bottom: 15px;">
+                <label style="display: block; margin-bottom: 8px; color: var(--gold-main); font-weight: bold;">Tag Name</label>
+                <input type="text" placeholder="e.g. links" style="width: 100%; background: #14120e; border: 1px solid var(--gold-main); color: #fcfbf9; padding: 12px; border-radius: 8px; outline: none;">
+            </div>
+            <div style="margin-bottom: 20px;">
+                <label style="display: block; margin-bottom: 8px; color: var(--gold-main); font-weight: bold;">Tag Content</label>
+                <textarea rows="3" placeholder="Paste the links here..." style="width: 100%; background: #14120e; border: 1px solid var(--gold-main); color: #fcfbf9; padding: 12px; border-radius: 8px; resize: vertical; outline: none;"></textarea>
+            </div>
+            <button style="background: var(--gold-main); color: #0a0907; border: none; padding: 10px 24px; border-radius: 6px; font-weight: bold; cursor: pointer; float: right; transition: all 0.2s;">Create Tag</button>
+            <div style="clear: both;"></div>
         </div>
     </div>
+                
                 
     <!-- (You can add the rest of the tabs using this exact same format!) -->
 
