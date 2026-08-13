@@ -48,7 +48,8 @@ def login():
 @app.route("/callback")
 def callback():
     code = request.args.get("code")
-    if not code: return redirect("/")
+    if not code: 
+        return "No code provided by Discord", 400
         
     data = {
         "client_id": os.getenv("DISCORD_CLIENT_ID"),
@@ -58,7 +59,10 @@ def callback():
         "redirect_uri": os.getenv("DISCORD_REDIRECT_URI")
     }
     res = requests.post("https://discord.com/api/oauth2/token", data=data, headers={"Content-Type": "application/x-www-form-urlencoded"})
-    if not res.ok: return redirect("/")
+    
+    # If Discord token exchange fails, display the exact error message!
+    if not res.ok:
+        return f"<h3>Discord OAuth Failed:</h3><p>{res.status_code} - {res.text}</p><p>Check your DISCORD_REDIRECT_URI and DISCORD_CLIENT_SECRET in Render.</p>", 400
         
     access_token = res.json().get("access_token")
     user_res = requests.get("https://discord.com/api/users/@me", headers={"Authorization": f"Bearer {access_token}"})
@@ -68,8 +72,10 @@ def callback():
         session["user"] = user_res.json()
         admin_guilds = [g for g in guilds_res.json() if (int(g.get("permissions", 0)) & 0x8) == 0x8]
         session["guilds"] = admin_guilds
+        return redirect("/")
+    else:
+        return "Failed to fetch user profile or server list from Discord API.", 400
         
-    return redirect("/")
 
 @app.route("/logout")
 def logout():
