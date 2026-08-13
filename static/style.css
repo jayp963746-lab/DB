@@ -60,4 +60,20 @@ body { background-color: var(--bg-base); color: var(--text-main); overflow-x: hi
   .content-area { padding: 16px; }
   .status-indicator { display: none; }
 }
+.bot-avatar { 
+  width: 32px; 
+  height: 32px; 
+  background: url('/static/avatar.jpg') center/cover; 
+  border-radius: 50%; 
+  border: 1px solid var(--gold-main); 
+  flex-shrink: 0;
+}
 
+.large-avatar { 
+  width: 80px; 
+  height: 80px; 
+  background: url('/static/avatar.jpg') center/cover; 
+  border-radius: 50%; 
+  border: 2px solid var(--gold-main); 
+  margin: 0 auto;
+}
