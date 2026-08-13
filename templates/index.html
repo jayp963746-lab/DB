@@ -96,22 +96,6 @@
     </div>
 
     <script>
-        function toggleMenu() { document.getElementById('sidebar').classList.toggle('open'); }
-        function closeMenu() { document.getElementById('sidebar').classList.remove('open'); }
-
-        {% if logged_in %}
-        fetch('/api/user')
-            .then(response => response.json())
-            .then(data => {
-                if(data.error) return;
-                
-                document.getElementById('user-name').innerText = data.user.username;
-                if(data.user.avatar) {
-                    document.getElementById('user-avatar').src = `https://cdn.discordapp.com/avatars/${data.user.id}/${data.user.avatar}.png`;
-                }
-
-                const select = document.getElementById('server-select');
-<script>
     function toggleMenu() { document.getElementById('sidebar').classList.toggle('open'); }
     function closeMenu() { document.getElementById('sidebar').classList.remove('open'); }
 
@@ -120,7 +104,7 @@
         document.getElementById('server-dropdown').classList.toggle('open');
     }
 
-    // Close custom dropdown when tapping outside
+    // Close custom dropdown when tapping anywhere else on the screen
     document.addEventListener('click', function(e) {
         const dropdown = document.getElementById('server-dropdown');
         if (dropdown && !dropdown.contains(e.target)) {
@@ -129,6 +113,7 @@
     });
 
     {% if logged_in %}
+    // 1. Fetch User Data & Populate Dropdown
     fetch('/api/user')
         .then(response => response.json())
         .then(data => {
@@ -157,8 +142,10 @@
                 };
                 menu.appendChild(item);
             });
-        });
+        })
+        .catch(err => console.error("Error loading user data:", err));
 
+    // 2. Handle Server Selection
     function selectGuild(guildId, guildName) {
         document.getElementById('selected-server-name').innerText = guildName;
         document.getElementById('server-dropdown').classList.remove('open');
@@ -170,6 +157,7 @@
         loadServerStats(guildId);
     }
 
+    // 3. Fetch Live Server Stats
     function loadServerStats(guildId) {
         if(!guildId) return;
         
@@ -184,25 +172,21 @@
                 
                 const setStatus = (id, isOn) => {
                     const el = document.getElementById(id);
-                    el.innerText = isOn ? "Active" : "Off";
-                    el.style.color = isOn ? "#4ade80" : "var(--text-muted)";
+                    if(el) {
+                        el.innerText = isOn ? "Active" : "Off";
+                        el.style.color = isOn ? "#4ade80" : "var(--text-muted)";
+                    }
                 };
                 
                 setStatus('status-automod', data.automod_on);
                 setStatus('status-antinuke', data.antinuke_on);
                 setStatus('status-antiraid', data.antiraid_on);
-            });
+            })
+            .catch(err => console.error("Error loading stats:", err));
     }
     {% endif %}
-</script>
+                        </script>
     
-                    setStatus('status-automod', data.automod_on);
-                    setStatus('status-antinuke', data.antinuke_on);
-                    setStatus('status-antiraid', data.antiraid_on);
-                });
-        }
-        {% endif %}
-    </script>
 </body>
 </html>
   
