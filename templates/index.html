@@ -120,33 +120,19 @@
     </div>
 
     
-        <!-- GENERAL TAB -->
-    <div id="tab-general" class="tab-section" style="display: none;">
-        <h3 class="section-title">⚙ General Settings</h3>
-        <div class="hero-card" style="text-align: left; padding: 25px;">
-            <div style="margin-bottom: 20px;">
-                <label style="display: block; margin-bottom: 8px; color: var(--gold-main); font-weight: bold;">Bot Prefix</label>
-                <input type="text" id="general-prefix" placeholder="e.g. !" style="width: 100%; max-width: 200px; background: #14120e; border: 1px solid var(--gold-main); color: #fcfbf9; padding: 12px; border-radius: 8px; outline: none;">
-                <p style="margin: 5px 0 0 0; color: var(--text-muted); font-size: 0.85rem;">The character used to trigger bot commands in chat.</p>
-            </div>
-            <button style="background: var(--gold-main); color: #0a0907; border: none; padding: 10px 24px; border-radius: 6px; font-weight: bold; cursor: pointer; float: right; transition: all 0.2s;">Save Changes</button>
-            <div style="clear: both;"></div>
-        </div>
-    </div>
-
-    <!-- COMMANDS TAB -->
+                    <!-- COMMANDS TAB -->
     <div id="tab-commands" class="tab-section" style="display: none;">
         <h3 class="section-title">❯_ Custom Commands</h3>
         <div class="hero-card" style="text-align: left; padding: 25px;">
             <div style="margin-bottom: 15px;">
                 <label style="display: block; margin-bottom: 8px; color: var(--gold-main); font-weight: bold;">Command Trigger</label>
-                <input type="text" placeholder="e.g. rules" style="width: 100%; background: #14120e; border: 1px solid var(--gold-main); color: #fcfbf9; padding: 12px; border-radius: 8px; outline: none;">
+                <input type="text" id="cmd-name" placeholder="e.g. rules" style="width: 100%; background: #14120e; border: 1px solid var(--gold-main); color: #fcfbf9; padding: 12px; border-radius: 8px; outline: none;">
             </div>
             <div style="margin-bottom: 20px;">
                 <label style="display: block; margin-bottom: 8px; color: var(--gold-main); font-weight: bold;">Bot Reply</label>
-                <textarea rows="3" placeholder="What should the bot say when someone types this?" style="width: 100%; background: #14120e; border: 1px solid var(--gold-main); color: #fcfbf9; padding: 12px; border-radius: 8px; resize: vertical; outline: none;"></textarea>
+                <textarea id="cmd-content" rows="3" placeholder="What should the bot say when someone types this?" style="width: 100%; background: #14120e; border: 1px solid var(--gold-main); color: #fcfbf9; padding: 12px; border-radius: 8px; resize: vertical; outline: none;"></textarea>
             </div>
-            <button style="background: var(--gold-main); color: #0a0907; border: none; padding: 10px 24px; border-radius: 6px; font-weight: bold; cursor: pointer; float: right; transition: all 0.2s;">Add Command</button>
+            <button onclick="saveCommand()" style="background: var(--gold-main); color: #0a0907; border: none; padding: 10px 24px; border-radius: 6px; font-weight: bold; cursor: pointer; float: right; transition: all 0.2s;">Add Command</button>
             <div style="clear: both;"></div>
         </div>
     </div>
@@ -165,7 +151,7 @@
                   <span class="slider round"></span>
                 </label>
             </div>
-            <button style="background: var(--gold-main); color: #0a0907; border: none; padding: 10px 24px; border-radius: 6px; font-weight: bold; cursor: pointer; float: right; transition: all 0.2s;">Save Changes</button>
+            <button onclick="saveAntiNuke()" style="background: var(--gold-main); color: #0a0907; border: none; padding: 10px 24px; border-radius: 6px; font-weight: bold; cursor: pointer; float: right; transition: all 0.2s;">Save Changes</button>
             <div style="clear: both;"></div>
         </div>
     </div>
@@ -184,7 +170,7 @@
                   <span class="slider round"></span>
                 </label>
             </div>
-            <button style="background: var(--gold-main); color: #0a0907; border: none; padding: 10px 24px; border-radius: 6px; font-weight: bold; cursor: pointer; float: right; transition: all 0.2s;">Save Changes</button>
+            <button onclick="saveAntiRaid()" style="background: var(--gold-main); color: #0a0907; border: none; padding: 10px 24px; border-radius: 6px; font-weight: bold; cursor: pointer; float: right; transition: all 0.2s;">Save Changes</button>
             <div style="clear: both;"></div>
         </div>
     </div>
@@ -194,8 +180,8 @@
         <h3 class="section-title">⚠ Warning System</h3>
         <div class="hero-card" style="text-align: left; padding: 25px;">
             <h2 style="margin: 0 0 15px 0; color: var(--gold-main); font-size: 1.2rem;">Recent Warnings</h2>
-            <div style="background: #14120e; border: 1px solid var(--border-gold); border-radius: 8px; padding: 20px; text-align: center; color: var(--text-muted);">
-                <p>No warnings have been issued yet.</p>
+            <div id="warnings-container" style="background: #14120e; border: 1px solid var(--border-gold); border-radius: 8px; padding: 20px; color: var(--text-muted);">
+                <p style="text-align:center;">No warnings have been issued yet.</p>
             </div>
         </div>
     </div>
@@ -206,10 +192,11 @@
         <div class="hero-card" style="text-align: left; padding: 25px;">
             <p style="color: var(--text-muted); margin-bottom: 20px;">Bind a server role to a specific emoji. Users will get the role when they react.</p>
             <div style="display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap;">
-                <input type="text" placeholder="Emoji (e.g. 👍)" style="flex: 1; background: #14120e; border: 1px solid var(--gold-main); color: #fcfbf9; padding: 12px; border-radius: 8px; outline: none;">
-                <input type="text" placeholder="Role ID" style="flex: 2; background: #14120e; border: 1px solid var(--gold-main); color: #fcfbf9; padding: 12px; border-radius: 8px; outline: none;">
+                <input type="text" id="rr-msg" placeholder="Message ID" style="flex: 2; background: #14120e; border: 1px solid var(--gold-main); color: #fcfbf9; padding: 12px; border-radius: 8px; outline: none;">
+                <input type="text" id="rr-emoji" placeholder="Emoji (e.g. 👍)" style="flex: 1; background: #14120e; border: 1px solid var(--gold-main); color: #fcfbf9; padding: 12px; border-radius: 8px; outline: none;">
+                <input type="text" id="rr-role" placeholder="Role ID" style="flex: 2; background: #14120e; border: 1px solid var(--gold-main); color: #fcfbf9; padding: 12px; border-radius: 8px; outline: none;">
             </div>
-            <button style="background: var(--gold-main); color: #0a0907; border: none; padding: 10px 24px; border-radius: 6px; font-weight: bold; cursor: pointer; float: right; transition: all 0.2s;">Create Reaction Role</button>
+            <button onclick="saveRR()" style="background: var(--gold-main); color: #0a0907; border: none; padding: 10px 24px; border-radius: 6px; font-weight: bold; cursor: pointer; float: right; transition: all 0.2s;">Create Reaction Role</button>
             <div style="clear: both;"></div>
         </div>
     </div>
@@ -222,18 +209,13 @@
                 <div>
                     <h2 style="margin: 0; color: var(--gold-main); font-size: 1.2rem;">Send Welcome Message</h2>
                 </div>
-                <label class="switch">
-                  <input type="checkbox" id="welcome-toggle">
-                  <span class="slider round"></span>
-                </label>
             </div>
-            <hr style="border: 0; border-top: 1px solid var(--border-gold); margin: 20px 0;">
             <div style="margin-bottom: 20px;">
                 <label style="display: block; margin-bottom: 8px; color: var(--gold-main); font-weight: bold;">Custom Message</label>
-                <textarea rows="3" placeholder="Welcome {user} to the server! You are member #{member_count}." style="width: 100%; background: #14120e; border: 1px solid var(--gold-main); color: #fcfbf9; padding: 12px; border-radius: 8px; resize: vertical; outline: none;"></textarea>
-                <p style="margin: 5px 0 0 0; color: var(--text-muted); font-size: 0.85rem;">Use <code>{user}</code> to ping them, and <code>{server}</code> for the server name.</p>
+                <textarea id="welcome-message" rows="3" placeholder="Welcome {user} to the server! You are member #{member_count}." style="width: 100%; background: #14120e; border: 1px solid var(--gold-main); color: #fcfbf9; padding: 12px; border-radius: 8px; resize: vertical; outline: none;"></textarea>
+                <p style="margin: 5px 0 0 0; color: var(--text-muted); font-size: 0.85rem;">Use <code>{member}</code> to ping them, and <code>{server}</code> for the server name.</p>
             </div>
-            <button style="background: var(--gold-main); color: #0a0907; border: none; padding: 10px 24px; border-radius: 6px; font-weight: bold; cursor: pointer; float: right; transition: all 0.2s;">Save Changes</button>
+            <button onclick="saveWelcome()" style="background: var(--gold-main); color: #0a0907; border: none; padding: 10px 24px; border-radius: 6px; font-weight: bold; cursor: pointer; float: right; transition: all 0.2s;">Save Changes</button>
             <div style="clear: both;"></div>
         </div>
     </div>
@@ -244,23 +226,27 @@
         <div class="hero-card" style="text-align: left; padding: 25px;">
              <div style="margin-bottom: 15px;">
                 <label style="display: block; margin-bottom: 8px; color: var(--gold-main); font-weight: bold;">Tag Name</label>
-                <input type="text" placeholder="e.g. links" style="width: 100%; background: #14120e; border: 1px solid var(--gold-main); color: #fcfbf9; padding: 12px; border-radius: 8px; outline: none;">
+                <input type="text" id="tag-name" placeholder="e.g. links" style="width: 100%; background: #14120e; border: 1px solid var(--gold-main); color: #fcfbf9; padding: 12px; border-radius: 8px; outline: none;">
             </div>
             <div style="margin-bottom: 20px;">
                 <label style="display: block; margin-bottom: 8px; color: var(--gold-main); font-weight: bold;">Tag Content</label>
-                <textarea rows="3" placeholder="Paste the links here..." style="width: 100%; background: #14120e; border: 1px solid var(--gold-main); color: #fcfbf9; padding: 12px; border-radius: 8px; resize: vertical; outline: none;"></textarea>
+                <textarea id="tag-content" rows="3" placeholder="Paste the links here..." style="width: 100%; background: #14120e; border: 1px solid var(--gold-main); color: #fcfbf9; padding: 12px; border-radius: 8px; resize: vertical; outline: none;"></textarea>
             </div>
-            <button style="background: var(--gold-main); color: #0a0907; border: none; padding: 10px 24px; border-radius: 6px; font-weight: bold; cursor: pointer; float: right; transition: all 0.2s;">Create Tag</button>
+            <button onclick="saveTag()" style="background: var(--gold-main); color: #0a0907; border: none; padding: 10px 24px; border-radius: 6px; font-weight: bold; cursor: pointer; float: right; transition: all 0.2s;">Create Tag</button>
             <div style="clear: both;"></div>
         </div>
-    </div>
+                    </div>
+                
                 
                 
     <!-- (You can add the rest of the tabs using this exact same format!) -->
 
             </div>
 
+            
     <script>
+        let currentGuildId = null;
+        
     function toggleMenu() { document.getElementById('sidebar').classList.toggle('open'); }
     function closeMenu() { document.getElementById('sidebar').classList.remove('open'); }
 
@@ -331,8 +317,9 @@
         })
         .catch(err => console.error("Error loading user data:", err));
 
-    // 2. Handle Server Selection
+        // 2. Handle Server Selection
     function selectGuild(guildId, guildName) {
+        currentGuildId = guildId;
         document.getElementById('selected-server-name').innerText = guildName;
         document.getElementById('server-dropdown').classList.remove('open');
 
@@ -341,7 +328,75 @@
         });
 
         loadServerStats(guildId);
+        loadServerSettings(guildId); // Fetches the live settings!
     }
+
+    // --- NEW LOGIC: Load and Save Data ---
+    function loadServerSettings(guildId) {
+        fetch(`/api/guild/${guildId}/settings`)
+            .then(res => res.json())
+            .then(data => {
+                if(data.error) return;
+                
+                document.getElementById('antinuke-toggle').checked = data.antinuke_enabled;
+                document.getElementById('antiraid-toggle').checked = data.antiraid_enabled;
+                document.getElementById('welcome-message').value = data.welcome_message || "";
+                
+                const warnContainer = document.getElementById('warnings-container');
+                if (data.recent_warnings && data.recent_warnings.length > 0) {
+                    warnContainer.innerHTML = data.recent_warnings.map(w => `<p style="margin-bottom:10px;">⚠️ ${w.reason} <br><span style="color:var(--gold-main); font-size:0.8em;">${w.created_at}</span></p>`).join("");
+                } else {
+                    warnContainer.innerHTML = "<p style='text-align:center;'>No warnings have been issued yet.</p>";
+                }
+            });
+    }
+
+    function saveSetting(endpoint, payload) {
+        if(!currentGuildId) return alert("Please select a server from the dropdown first!");
+        
+        fetch(`/api/guild/${currentGuildId}/${endpoint}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        })
+        .then(res => res.json())
+        .then(data => {
+            if(data.success) {
+                alert("Settings saved successfully!");
+                loadServerStats(currentGuildId); 
+            } else {
+                alert(data.error || "Error saving settings.");
+            }
+        });
+    }
+
+    // Button Triggers
+    function saveAntiNuke() { saveSetting("settings", { antinuke_enabled: document.getElementById('antinuke-toggle').checked }); }
+    function saveAntiRaid() { saveSetting("settings", { antiraid_enabled: document.getElementById('antiraid-toggle').checked }); }
+    function saveWelcome() { saveSetting("settings", { welcome_message: document.getElementById('welcome-message').value }); }
+    
+    function saveCommand() {
+        const name = document.getElementById('cmd-name').value;
+        const content = document.getElementById('cmd-content').value;
+        if(!name || !content) return alert("Please fill in both command fields.");
+        saveSetting("tags", { name, content });
+    }
+    
+    function saveTag() {
+        const name = document.getElementById('tag-name').value;
+        const content = document.getElementById('tag-content').value;
+        if(!name || !content) return alert("Please fill in both tag fields.");
+        saveSetting("tags", { name, content });
+    }
+    
+    function saveRR() {
+        const emoji = document.getElementById('rr-emoji').value;
+        const role = document.getElementById('rr-role').value;
+        const msg = document.getElementById('rr-msg').value;
+        if(!emoji || !role || !msg) return alert("Please fill in all reaction role fields.");
+        saveSetting("reactionrole", { emoji, role_id: role, message_id: msg });
+        }
+        
 
     // 3. Fetch Live Server Stats
     function loadServerStats(guildId) {
