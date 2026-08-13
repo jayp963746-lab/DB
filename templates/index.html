@@ -25,17 +25,17 @@
                 <div class="bot-avatar"></div> Heavenly
             </div>
             <nav class="nav-menu">
-                <a href="#" class="nav-item active">⌂ Home</a>
-                <a href="#" class="nav-item">⚙ General</a>
-                <a href="#" class="nav-item">❯_ Commands</a>
-                <div class="nav-label">MODULES</div>
-                <a href="#" class="nav-item">🛡 AutoMod</a>
-                <a href="#" class="nav-item">☢ Anti-Nuke</a>
-                <a href="#" class="nav-item">⚔ Anti-Raid</a>
-                <a href="#" class="nav-item">⚠ Warnings</a>
-                <a href="#" class="nav-item">☺ Reaction Roles</a>
-                <a href="#" class="nav-item">👋 Welcome & Leave</a>
-                <a href="#" class="nav-item">🏷 Tags</a>
+    <a href="#" class="nav-item active" onclick="switchTab('home', this)">⌂ Home</a>
+    <a href="#" class="nav-item" onclick="switchTab('general', this)">⚙ General</a>
+    <a href="#" class="nav-item" onclick="switchTab('commands', this)">❯_ Commands</a>
+    <div class="nav-label">MODULES</div>
+    <a href="#" class="nav-item" onclick="switchTab('automod', this)">🛡 AutoMod</a>
+    <a href="#" class="nav-item" onclick="switchTab('antinuke', this)">☢ Anti-Nuke</a>
+    <a href="#" class="nav-item" onclick="switchTab('antiraid', this)">⚔ Anti-Raid</a>
+    <a href="#" class="nav-item" onclick="switchTab('warnings', this)">⚠ Warnings</a>
+    <a href="#" class="nav-item" onclick="switchTab('reactionroles', this)">☺ Reaction Roles</a>
+    <a href="#" class="nav-item" onclick="switchTab('welcome', this)">👋 Welcome & Leave</a>
+    <a href="#" class="nav-item" onclick="switchTab('tags', this)">🏷 Tags</a>
             </nav>
         </aside>
 
@@ -65,35 +65,79 @@
             </header>
 
             <div class="content-area" onclick="closeMenu()">
-                <div class="hero-card">
-                    <h4 class="hero-subtitle">✦ LIVE SERVER STATS</h4>
-                    <h1>Heavenly is watching over this server.</h1>
-                    <p>Select a server from the top menu to load live stats.</p>
-                </div>
+    
+    <!-- HOME TAB (Your current dashboard) -->
+    <div id="tab-home" class="tab-section">
+        <div class="hero-card">
+            <h4 class="hero-subtitle">✦ LIVE SERVER STATS</h4>
+            <h1>Heavenly is watching over this server.</h1>
+            <p>Select a server from the top menu to load live stats.</p>
+        </div>
 
-                <div class="stats-grid">
-                    <div class="stat-card">
-                        <span class="stat-label">Members</span>
-                        <span class="stat-value" id="stat-members">—</span>
-                    </div>
-                    <div class="stat-card">
-                        <span class="stat-label">Warnings Issued</span>
-                        <span class="stat-value" id="stat-warnings">—</span>
-                    </div>
-                    <div class="stat-card">
-                        <span class="stat-label">Active Giveaways</span>
-                        <span class="stat-value" id="stat-giveaways">—</span>
-                    </div>
-                    <div class="stat-card">
-                        <span class="stat-label">Tags</span>
-                        <span class="stat-value" id="stat-tags">—</span>
-               </div>
-                        <div class="module-status" id="status-antiraid">Off</div>
-                    </div>
-                </div>
+        <div class="stats-grid">
+            <div class="stat-card">
+                <span class="stat-label">Members</span>
+                <span class="stat-value" id="stat-members">—</span>
             </div>
-        </main>
+            <div class="stat-card">
+                <span class="stat-label">Warnings Issued</span>
+                <span class="stat-value" id="stat-warnings">—</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-label">Active Giveaways</span>
+                <span class="stat-value" id="stat-giveaways">—</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-label">Tags</span>
+                <span class="stat-value" id="stat-tags">—</span>
+            </div>
+        </div>
+
+        <h3 class="section-title">Protection modules</h3>
+        <div class="module-list">
+            <div class="module-item">
+                <div class="module-info">
+                    <h3>AutoMod</h3>
+                    <p>Automatically filters bad words and spam.</p>
+                </div>
+                <div class="module-status" id="status-automod">Off</div>
+            </div>
+            <div class="module-item">
+                <div class="module-info">
+                    <h3>Anti-Nuke</h3>
+                    <p>Prevents mass channel deletion and bans.</p>
+                </div>
+                <div class="module-status" id="status-antinuke">Off</div>
+            </div>
+            <div class="module-item">
+                <div class="module-info">
+                    <h3>Anti-Raid</h3>
+                    <p>Locks down the server during mass join attacks.</p>
+                </div>
+                <div class="module-status" id="status-antiraid">Off</div>
+            </div>
+        </div>
     </div>
+
+    <!-- GENERAL TAB -->
+    <div id="tab-general" class="tab-section" style="display: none;">
+        <h3 class="section-title">⚙ General Settings</h3>
+        <div class="hero-card">
+            <p>This page is ready to be built! We can add prefix settings and bot toggles here.</p>
+        </div>
+    </div>
+
+    <!-- AUTOMOD TAB -->
+    <div id="tab-automod" class="tab-section" style="display: none;">
+        <h3 class="section-title">🛡 AutoMod Configuration</h3>
+        <div class="hero-card">
+            <p>This is where we will add the toggle switches and bad word list editor.</p>
+        </div>
+    </div>
+
+    <!-- (You can add the rest of the tabs using this exact same format!) -->
+
+            </div>
 
     <script>
     function toggleMenu() { document.getElementById('sidebar').classList.toggle('open'); }
@@ -111,7 +155,28 @@
             dropdown.classList.remove('open');
         }
     });
-
+        function switchTab(tabId, element) {
+        // Hide all tab sections
+        document.querySelectorAll('.tab-section').forEach(tab => {
+            tab.style.display = 'none';
+        });
+        
+        // Show the selected tab
+        const targetTab = document.getElementById('tab-' + tabId);
+        if(targetTab) targetTab.style.display = 'block';
+        
+        // Remove 'active' color from all sidebar links
+        document.querySelectorAll('.nav-item').forEach(nav => {
+            nav.classList.remove('active');
+        });
+        
+        // Add gold 'active' color to the one you just clicked
+        if(element) element.classList.add('active');
+        
+        // Close menu on mobile after clicking
+        if (window.innerWidth <= 768) closeMenu();
+        }
+        
     {% if logged_in %}
     // 1. Fetch User Data & Populate Dropdown
     fetch('/api/user')
