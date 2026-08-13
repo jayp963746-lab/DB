@@ -138,7 +138,76 @@ def api_overview(guild_id):
         "antinuke_on": bool(antinuke.get("enabled")),
         "antiraid_on": bool(antiraid.get("enabled"))
     })
+@app.route("/api/guild/<guild_id>/settings", methods=["GET", "POST"])
+def api_guild_settings(guild_id):
+    if "user" not in session: return jsonify({"error": "unauthorized"}), 401
+    
+    db = get_db()
+    if request.method == "POST":
+        data = request.json
+        
+        # Save Welcome Message
+        if "welcome_message" in data:
+            db.execute("INSERT INTO guild_config (guild_id, welcome_message) VALUES (?, ?) ON CONFLICT(guild_id) DO UPDATE SET welcome_message=excluded.welcome_message", (guild_id, data["welcome_message"]))
+            
+        # Save Anti-Nuke
+        if "antinuke_enabled" in data:
+            db.execute("INSERT INTO antinuke_config (guild_id, enabled) VALUES (?, ?) ON CONFLICT(guild_id) DO UPDATE SET enabled=excluded.enabled", (guild_id, int(data["antinuke_enabled"])))
+            
+        # Save Anti-Raid
+        if "antiraid_enabled" in data:
+            db.execute("INSERT INTO antiraid_config (guild_id, enabled) VALUES (?, ?) ON CONFLICT(guild_id) DO UPDATE SET enabled=excluded.enabled", (guild_id, int(data["antiraid_enabled"])))
+            
+        db.commit()
+        db.close()
+        return jsonify({"success": True})
 
+    # For GET requests: load data to display in the HTML
+    config = get_config_row("guild_config", guild_id)
+    antinuke = get_config_row("antinuke_config", guild_id)
+    antiraid = get_config_row("antiraid_config", guild_id)
+    
+    warnings = db.execute("SELECT reason, created_at FROM warnings WHERE guild_id=? ORDER BY created_at DESC LIMIT 10", (guild_id,)).fetchall()
+    db.close()
+    
+    return jsonify({
+        "welcome_message": config.get("welcome_message", ""),
+        "antinuke_enabled": bool(antinuke.get("enabled")),
+        "antiraid_enabled": bool(antiraid.get("enabled")),
+        "recent_warnings": [dict(w) for w in warnings]
+    })
+
+@app.route("/api/guild/<guild_id>/tags", methods=["POST"])
+def api_guild_tags(guild_id):
+    if "user" not in session: return jsonify({"error": "unauthorized"}), 401
+    data = request.json
+    db = get_db()
+    try:
+        # We save both custom commands and tags to the tags table
+        db.execute("INSERT INTO tags (guild_id, name, content, creator_id) VALUES (?, ?, ?, ?)", 
+                   (guild_id, data.get("name").lower(), data.get("content"), session["user"]["id"]))
+        db.commit()
+        return jsonify({"success": True})
+    except sqlite3.IntegrityError:
+        return jsonify({"error": "A tag or command with that name already exists."}), 400
+    finally:
+        db.close()
+
+@app.route("/api/guild/<guild_id>/reactionrole", methods=["POST"])
+def api_guild_rr(guild_id):
+    if "user" not in session: return jsonify({"error": "unauthorized"}), 401
+    data = request.json
+    db = get_db()
+    try:
+        db.execute("INSERT OR REPLACE INTO reaction_roles (message_id, emoji, role_id, guild_id) VALUES (?,?,?,?)",
+                   (int(data.get("message_id")), data.get("emoji"), int(data.get("role_id")), guild_id))
+        db.commit()
+        return jsonify({"success": True})
+    except Exception as e:
+        return jsonify({"error": "Message ID and Role ID must be numbers."}), 400
+    finally:
+        db.close()
+    
 if __name__ == "__main__":
     from waitress import serve
     port = int(os.getenv("PORT", 10000))
